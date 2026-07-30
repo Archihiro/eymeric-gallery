@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream EYMRYC - Direction Artistiques</title>
+    <title>Stream EYMRYC - Creative Showcase</title>
     <style>
         * {
             margin: 0;
@@ -44,7 +44,48 @@
         .subtitle {
             font-size: 16px;
             color: #aaa;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid rgba(47, 91, 255, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            background: transparent;
+            color: #aaa;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: #2F5BFF;
+        }
+
+        .tab-btn.active {
+            color: #FFC857;
+            background: rgba(47, 91, 255, 0.1);
+            border: 2px solid #2F5BFF;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .controls {
@@ -121,6 +162,18 @@
             align-items: center;
             gap: 5px;
             box-shadow: 0 4px 15px rgba(255, 200, 87, 0.4);
+        }
+
+        .room-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px 15px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #FFC857;
         }
 
         .modal {
@@ -262,6 +315,11 @@
                 font-size: 24px;
                 padding: 10px;
             }
+
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -269,16 +327,35 @@
     <div class="container">
         <header>
             <h1>Stream EYMRYC</h1>
-            <p class="subtitle">Galerie des Directions Artistiques</p>
-            <p style="color: #888; font-size: 13px;">⭐ Les images marquées sont les préférées du créateur</p>
+            <p class="subtitle">Creative Showcase</p>
         </header>
 
-        <div class="controls">
-            <button class="filter-btn active" onclick="filterGallery('all')">Toutes les images</button>
-            <button class="filter-btn" onclick="filterGallery('favorites')">⭐ Préférées uniquement</button>
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('pixel-art')">🏠 Pixel Art Rooms</button>
+            <button class="tab-btn" onclick="switchTab('eymeric')">✨ Eymeric Gallery</button>
         </div>
 
-        <div class="gallery" id="gallery"></div>
+        <!-- TAB 1: PIXEL ART ROOMS -->
+        <div id="pixel-art" class="tab-content active">
+            <div class="controls" style="justify-content: center;">
+                <p style="color: #aaa; font-size: 14px;">10 Bedroom Variations - Retro Anime Pixel Art</p>
+            </div>
+            <div class="gallery" id="pixel-gallery"></div>
+        </div>
+
+        <!-- TAB 2: EYMERIC GALLERY -->
+        <div id="eymeric" class="tab-content">
+            <div class="controls">
+                <button class="filter-btn active" onclick="filterGallery('all')">Toutes les images</button>
+                <button class="filter-btn" onclick="filterGallery('favorites')">⭐ Préférées uniquement</button>
+            </div>
+            <div class="gallery" id="eymeric-gallery"></div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <h3>Aucune image trouvée</h3>
+                <p>Essayez une autre filtration</p>
+            </div>
+        </div>
 
         <div id="emptyState" class="empty-state" style="display: none;">
             <h3>Aucune image trouvée</h3>
@@ -297,12 +374,26 @@
     </div>
 
     <footer>
-        <p>© 2026 Stream EYMRYC | Direction Artistiques</p>
+        <p>© 2026 Stream EYMRYC | Creative Showcase</p>
     </footer>
 
     <script>
-        const images = [
-            // 9 Préférées au début (avec badges)
+        // PIXEL ART ROOMS DATA
+        const pixelArtRooms = [
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224245_b510de1e-d176-48c4-81c3-edd750bfa91b.png", label: "Studio Loft"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224251_b7a38861-08c6-44f1-8a14-f413ad3d0354.png", label: "Gaming Setup"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224256_f1b6a42e-21a5-4eb9-946c-5e0a40b6b774.png", label: "Bibliothèque"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224301_84a8bbe3-09eb-44fb-901d-c232d3cad27b.png", label: "Artiste Créatif"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224306_188c9267-fe9a-4b90-aafc-c87782b95c98.png", label: "Zen Minimaliste"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224313_fef83552-7c54-4863-a0b4-b6e1207de59f.png", label: "Vintage Collector"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224318_5cd7d066-f9ab-4b1d-9e8b-1a48c904bdc6.png", label: "Mezzanine"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224323_af6df262-93ce-4e2f-af34-8bdc9e4b574c.png", label: "Cinéphile Media"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224328_ce7f9c09-c35a-46aa-b741-e4d785434967.png", label: "Fenêtre Panoramique"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224333_1e7e746c-a819-4e3c-9406-209a70befb63.png", label: "Atelier Workspace"}
+        ];
+
+        // EYMERIC GALLERY DATA - 10 images (9 préférées + 1)
+        const eymerricImages = [
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/d579c5e8-77dc-4279-a570-6d423d90a8c7.png", favorite: true},
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/6d7fc269-ff9b-4d61-83f4-307d977378e3.webp", favorite: true},
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/ee45fd8f-4a1b-4769-a3a0-c5e3f36dc927.png", favorite: true},
@@ -312,41 +403,62 @@
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/d5182e6d-183e-4808-b838-37e21f8e822d.webp", favorite: true},
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/04f50edf-86b5-4066-a995-c1adf01f1a06.png", favorite: true},
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/1c9b0b6c-514d-4014-9a07-ab2372cfd677.png", favorite: true},
-            
-            // 20 Autres images (sans badges)
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/e0e47ce4-029c-4ad6-acdb-90fd82e8da14.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/391205a6-6900-435e-97de-a46c978709f0.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/433b111b-73a8-47af-aa87-97775824b444.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/598956f8-7080-4b01-8b98-56d215548537.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/28ad2365-677e-4ed9-87db-5356f526ce52.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/66e418f3-a358-44f2-9186-fba07cfe5588.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/489be3ec-147a-40d8-95d9-88a41e2208c6.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/df22ee51-e2b5-41cc-a0d8-878e28c38f83.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/8ee0c433-d250-4855-ab94-a609426bc993.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/04e149eb-dc36-425d-b2fa-ebbf7cc81591.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/c6dd254a-537c-47d1-8f38-e6284ff3d9e5.webp", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/598e3486-4ec2-46e1-8919-ed21b1ee8004.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/9a997b2c-ebae-4c1d-af6b-a88fc7ad7ad2.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/41429c4a-410b-4c2c-9baa-6461ee130936.webp", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/7a4c78fd-f032-49a6-9d10-a87a6495561a.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/ab8860da-8c1e-4933-8cc4-97066c77220c.webp", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/5737e4b3-62f7-4b1b-80a6-c7a22b31f5fd.webp", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/88f6babb-4e56-4315-8a59-da3438422b5f.png", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/8daa8153-875a-40f2-a0b6-5e6cef353531.webp", favorite: false},
-            {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/86242c57-0eab-48d1-863f-b147164d7015.png", favorite: false},
         ];
 
         let currentFilter = 'all';
         let currentModalIndex = 0;
+        let currentGalleryType = 'pixel-art';
 
-        function renderGallery() {
-            const gallery = document.getElementById('gallery');
+        function switchTab(tab) {
+            // Hide all tabs
+            document.getElementById('pixel-art').classList.remove('active');
+            document.getElementById('eymeric').classList.remove('active');
+
+            // Remove active class from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+
+            currentGalleryType = tab;
+
+            // Render appropriate gallery
+            if (tab === 'pixel-art') {
+                renderPixelArtGallery();
+            } else {
+                renderEymerricGallery();
+            }
+        }
+
+        function renderPixelArtGallery() {
+            const gallery = document.getElementById('pixel-gallery');
+            gallery.innerHTML = '';
+
+            pixelArtRooms.forEach((room, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.onclick = () => openModal(index, pixelArtRooms, 'pixel-art');
+                
+                item.innerHTML = `
+                    <img src="${room.url}" alt="${room.label}" loading="lazy">
+                    <div class="room-label">${room.label}</div>
+                `;
+                gallery.appendChild(item);
+            });
+
+            document.getElementById('totalCounter').textContent = pixelArtRooms.length;
+        }
+
+        function renderEymerricGallery() {
+            const gallery = document.getElementById('eymeric-gallery');
             const emptyState = document.getElementById('emptyState');
             gallery.innerHTML = '';
 
             const filtered = currentFilter === 'all' 
-                ? images 
-                : images.filter(img => img.favorite);
+                ? eymerricImages 
+                : eymerricImages.filter(img => img.favorite);
 
             if (filtered.length === 0) {
                 emptyState.style.display = 'block';
@@ -358,7 +470,7 @@
             filtered.forEach((img, index) => {
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
-                item.onclick = () => openModal(index, filtered);
+                item.onclick = () => openModal(index, filtered, 'eymeric');
                 
                 let html = `<img src="${img.url}" alt="Image ${index + 1}" loading="lazy">`;
                 
@@ -377,10 +489,10 @@
             currentFilter = filter;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            renderGallery();
+            renderEymerricGallery();
         }
 
-        function openModal(index, imageList) {
+        function openModal(index, imageList, type) {
             currentModalIndex = index;
             const modal = document.getElementById('modal');
             const modalImage = document.getElementById('modalImage');
@@ -399,16 +511,20 @@
 
         function prevImage(e) {
             e.stopPropagation();
-            const filtered = currentFilter === 'all' ? images : images.filter(img => img.favorite);
-            currentModalIndex = (currentModalIndex - 1 + filtered.length) % filtered.length;
-            openModal(currentModalIndex, filtered);
+            const imageList = currentGalleryType === 'pixel-art' 
+                ? pixelArtRooms 
+                : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
+            currentModalIndex = (currentModalIndex - 1 + imageList.length) % imageList.length;
+            openModal(currentModalIndex, imageList, currentGalleryType);
         }
 
         function nextImage(e) {
             e.stopPropagation();
-            const filtered = currentFilter === 'all' ? images : images.filter(img => img.favorite);
-            currentModalIndex = (currentModalIndex + 1) % filtered.length;
-            openModal(currentModalIndex, filtered);
+            const imageList = currentGalleryType === 'pixel-art' 
+                ? pixelArtRooms 
+                : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
+            currentModalIndex = (currentModalIndex + 1) % imageList.length;
+            openModal(currentModalIndex, imageList, currentGalleryType);
         }
 
         document.addEventListener('keydown', (e) => {
@@ -418,7 +534,8 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        renderGallery();
+        // Render pixel art on load
+        renderPixelArtGallery();
     </script>
 </body>
 </html>
