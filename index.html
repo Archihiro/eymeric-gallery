@@ -55,6 +55,35 @@
             flex-wrap: wrap;
             border-bottom: 2px solid rgba(47, 91, 255, 0.2);
             padding-bottom: 20px;
+            align-items: center;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-right: 2px solid rgba(47, 91, 255, 0.2);
+            padding-right: 15px;
+        }
+
+        .tab-group:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .tab-group-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .tab-group-label {
+                display: none !important;
+            }
         }
 
         .tab-btn {
@@ -301,6 +330,122 @@
             margin-bottom: 10px;
         }
 
+        .selection-panel {
+            background: rgba(47, 91, 255, 0.1);
+            border: 2px solid #2F5BFF;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .selection-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #FFC857;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .selected-items-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .selected-item-thumbnail {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            border: 2px solid #FFC857;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selected-item-thumbnail:hover {
+            box-shadow: 0 0 15px rgba(255, 200, 87, 0.3);
+        }
+
+        .selected-item-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .selected-item-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 50, 50, 0.9);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .selected-item-thumbnail:hover .selected-item-remove {
+            opacity: 1;
+        }
+
+        .selection-count {
+            text-align: center;
+            color: #FFC857;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .gallery-item.selectable {
+            position: relative;
+        }
+
+        .selection-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #FFC857;
+            border-radius: 6px;
+            background: rgba(255, 200, 87, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFC857;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .gallery-item:hover .selection-checkbox {
+            opacity: 1;
+        }
+
+        .gallery-item.selected .selection-checkbox {
+            opacity: 1;
+            background: #FFC857;
+            color: #0a0a14;
+        }
+
+        .selection-checkbox:hover {
+            transform: scale(1.1);
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 32px;
@@ -320,6 +465,11 @@
                 padding: 10px 20px;
                 font-size: 12px;
             }
+
+            .tab-group {
+                border-right: none;
+                padding-right: 0;
+            }
         }
     </style>
 </head>
@@ -332,19 +482,41 @@
 
         <!-- TABS -->
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('pixel-art')">🏠 Pixel Art Rooms</button>
+            <!-- PIXEL ART ROOMS GROUP -->
+            <div class="tab-group">
+                <span class="tab-group-label">Pixel Art Rooms</span>
+                <button class="tab-btn active" onclick="switchTab('pixel-art-v2')">🌆 v2 (Extérieurs)</button>
+                <button class="tab-btn" onclick="switchTab('pixel-art')">🏠 v1 (Intérieurs)</button>
+            </div>
+
+            <!-- EYMERIC -->
             <button class="tab-btn" onclick="switchTab('eymeric')">✨ Eymeric Gallery</button>
         </div>
 
-        <!-- TAB 1: PIXEL ART ROOMS -->
-        <div id="pixel-art" class="tab-content active">
+        <!-- TAB 1: PIXEL ART ROOMS V2 (Extérieurs Paris) - LANDING PAGE -->
+        <div id="pixel-art-v2" class="tab-content active">
+            <!-- SELECTION PANEL -->
+            <div class="selection-panel" id="selectionPanelV2" style="display: none;">
+                <div class="selection-title">✨ Tes images préférées</div>
+                <div class="selected-items-list" id="selectedV2List"></div>
+                <div class="selection-count">Sélectionnées: <span id="selectedCountV2">0</span></div>
+            </div>
+
+            <div class="controls" style="justify-content: center;">
+                <p style="color: #aaa; font-size: 14px;">6 Paris Outdoor Scenes - Retro Anime Pixel Art</p>
+            </div>
+            <div class="gallery" id="pixel-v2-gallery"></div>
+        </div>
+
+        <!-- TAB 2: PIXEL ART ROOMS (Intérieurs) -->
+        <div id="pixel-art" class="tab-content">
             <div class="controls" style="justify-content: center;">
                 <p style="color: #aaa; font-size: 14px;">10 Bedroom Variations - Retro Anime Pixel Art</p>
             </div>
             <div class="gallery" id="pixel-gallery"></div>
         </div>
 
-        <!-- TAB 2: EYMERIC GALLERY -->
+        <!-- TAB 3: EYMERIC GALLERY -->
         <div id="eymeric" class="tab-content">
             <div class="controls">
                 <button class="filter-btn active" onclick="filterGallery('all')">Toutes les images</button>
@@ -355,11 +527,6 @@
                 <h3>Aucune image trouvée</h3>
                 <p>Essayez une autre filtration</p>
             </div>
-        </div>
-
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <h3>Aucune image trouvée</h3>
-            <p>Essayez une autre filtration</p>
         </div>
     </div>
 
@@ -378,7 +545,17 @@
     </footer>
 
     <script>
-        // PIXEL ART ROOMS DATA
+        // PIXEL ART ROOMS V2 (Extérieurs Paris) DATA
+        const pixelArtRoomsV2 = [
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221224_51f3a201-fc33-4454-b059-1aad99dae4e7.png", label: "Le Marais - Café Coin"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221228_0180977d-1aec-40d5-96fa-69e6fa831de1.png", label: "Châtelet - Jardin Central"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221233_571a87e6-3cdc-47c6-83e3-0dfd7255e158.png", label: "Buttes Chaumont - Pelouse"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221238_83d81067-dcb3-44dd-92ed-e8f0bd852a4e.png", label: "Buttes Chaumont - Pont"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221244_7504ccdb-a4b9-4eb0-b63c-02feeab886fc.png", label: "La Défense - Esplanade Zen"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221248_a5e34f56-5eae-4139-a1bb-00ba79a01b30.png", label: "La Défense - Jardin"}
+        ];
+
+        // PIXEL ART ROOMS (Intérieurs) DATA
         const pixelArtRooms = [
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224245_b510de1e-d176-48c4-81c3-edd750bfa91b.png", label: "Studio Loft"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224251_b7a38861-08c6-44f1-8a14-f413ad3d0354.png", label: "Gaming Setup"},
@@ -392,7 +569,7 @@
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224333_1e7e746c-a819-4e3c-9406-209a70befb63.png", label: "Atelier Workspace"}
         ];
 
-        // EYMERIC GALLERY DATA - 10 images (9 préférées + 1)
+        // EYMERIC GALLERY DATA
         const eymerricImages = [
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/d579c5e8-77dc-4279-a570-6d423d90a8c7.png", favorite: true},
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/6d7fc269-ff9b-4d61-83f4-307d977378e3.webp", favorite: true},
@@ -408,10 +585,12 @@
 
         let currentFilter = 'all';
         let currentModalIndex = 0;
-        let currentGalleryType = 'pixel-art';
+        let currentGalleryType = 'pixel-art-v2';
+        let selectedImagesV2 = []; // Array to store selected images from V2
 
         function switchTab(tab) {
             // Hide all tabs
+            document.getElementById('pixel-art-v2').classList.remove('active');
             document.getElementById('pixel-art').classList.remove('active');
             document.getElementById('eymeric').classList.remove('active');
 
@@ -425,11 +604,93 @@
             currentGalleryType = tab;
 
             // Render appropriate gallery
-            if (tab === 'pixel-art') {
+            if (tab === 'pixel-art-v2') {
+                renderPixelArtV2Gallery();
+            } else if (tab === 'pixel-art') {
                 renderPixelArtGallery();
             } else {
                 renderEymerricGallery();
             }
+        }
+
+        function renderPixelArtV2Gallery() {
+            const gallery = document.getElementById('pixel-v2-gallery');
+            gallery.innerHTML = '';
+
+            pixelArtRoomsV2.forEach((room, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item selectable';
+                
+                // Vérifier si l'image est sélectionnée
+                const isSelected = selectedImagesV2.some(sel => sel.url === room.url);
+                if (isSelected) {
+                    item.classList.add('selected');
+                }
+                
+                item.innerHTML = `
+                    <img src="${room.url}" alt="${room.label}" loading="lazy" style="cursor: pointer;">
+                    <div class="room-label">${room.label}</div>
+                    <div class="selection-checkbox" onclick="toggleSelectionV2(event, '${room.url}')">✓</div>
+                `;
+                
+                item.onclick = (e) => {
+                    if (e.target.closest('.selection-checkbox')) return;
+                    openModal(index, pixelArtRoomsV2, 'pixel-art-v2');
+                };
+                gallery.appendChild(item);
+            });
+
+            document.getElementById('totalCounter').textContent = pixelArtRoomsV2.length;
+            updateSelectedDisplayV2();
+        }
+
+        function toggleSelectionV2(event, imageUrl) {
+            event.stopPropagation();
+            
+            const selectedIndex = selectedImagesV2.findIndex(sel => sel.url === imageUrl);
+            
+            if (selectedIndex >= 0) {
+                // Deselect
+                selectedImagesV2.splice(selectedIndex, 1);
+            } else {
+                // Select
+                const room = pixelArtRoomsV2.find(r => r.url === imageUrl);
+                selectedImagesV2.push({url: imageUrl, label: room.label});
+            }
+            
+            renderPixelArtV2Gallery();
+        }
+
+        function updateSelectedDisplayV2() {
+            const container = document.getElementById('selectedV2List');
+            const panel = document.getElementById('selectionPanelV2');
+            const count = document.getElementById('selectedCountV2');
+            
+            count.textContent = selectedImagesV2.length;
+            
+            if (selectedImagesV2.length === 0) {
+                panel.style.display = 'none';
+                container.innerHTML = '';
+                return;
+            }
+            
+            panel.style.display = 'block';
+            container.innerHTML = '';
+            
+            selectedImagesV2.forEach((img, idx) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'selected-item-thumbnail';
+                thumb.innerHTML = `
+                    <img src="${img.url}" alt="${img.label}">
+                    <div class="selected-item-remove" onclick="removeFromSelectedV2(${idx})">✕</div>
+                `;
+                container.appendChild(thumb);
+            });
+        }
+
+        function removeFromSelectedV2(index) {
+            selectedImagesV2.splice(index, 1);
+            renderPixelArtV2Gallery();
         }
 
         function renderPixelArtGallery() {
@@ -511,7 +772,9 @@
 
         function prevImage(e) {
             e.stopPropagation();
-            const imageList = currentGalleryType === 'pixel-art' 
+            let imageList = currentGalleryType === 'pixel-art-v2' 
+                ? pixelArtRoomsV2 
+                : currentGalleryType === 'pixel-art' 
                 ? pixelArtRooms 
                 : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
             currentModalIndex = (currentModalIndex - 1 + imageList.length) % imageList.length;
@@ -520,7 +783,9 @@
 
         function nextImage(e) {
             e.stopPropagation();
-            const imageList = currentGalleryType === 'pixel-art' 
+            let imageList = currentGalleryType === 'pixel-art-v2' 
+                ? pixelArtRoomsV2 
+                : currentGalleryType === 'pixel-art' 
                 ? pixelArtRooms 
                 : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
             currentModalIndex = (currentModalIndex + 1) % imageList.length;
@@ -534,8 +799,8 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // Render pixel art on load
-        renderPixelArtGallery();
+        // Render pixel art v2 on load
+        renderPixelArtV2Gallery();
     </script>
 </body>
 </html>
