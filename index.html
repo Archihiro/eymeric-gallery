@@ -166,6 +166,17 @@
             box-shadow: 0 10px 30px rgba(47, 91, 255, 0.3);
         }
 
+        #badges-official, #badges-bonus {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        #badges-official .gallery-item,
+        #badges-bonus .gallery-item {
+            aspect-ratio: 1/1;
+        }
+
         .gallery-item img {
             width: 100%;
             height: 100%;
@@ -491,6 +502,9 @@
 
             <!-- EYMERIC -->
             <button class="tab-btn" onclick="switchTab('eymeric')">✨ Eymeric Gallery</button>
+
+            <!-- BADGES -->
+            <button class="tab-btn" onclick="switchTab('badges')">🎖️ Badges</button>
         </div>
 
         <!-- TAB 1: PIXEL ART ROOMS V2 (Extérieurs Paris) - LANDING PAGE -->
@@ -514,6 +528,20 @@
                 <p style="color: #aaa; font-size: 14px;">10 Bedroom Variations - Retro Anime Pixel Art</p>
             </div>
             <div class="gallery" id="pixel-gallery"></div>
+        </div>
+
+        <!-- TAB 4: BADGES -->
+        <div id="badges" class="tab-content">
+            <div class="controls" style="justify-content: center; margin-bottom: 30px;">
+                <p style="color: #FFC857; font-size: 14px; font-weight: 600;">🎖️ BADGES CALCIFÈRE - TIERS OFFICIELS</p>
+            </div>
+            <div class="gallery" id="badges-official"></div>
+
+            <!-- BONUS SECTION -->
+            <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(47, 91, 255, 0.2);">
+                <p style="color: #888; font-size: 14px; margin-bottom: 30px;">✨ Un petit bonus pour le fun ✨</p>
+            </div>
+            <div class="gallery" id="badges-bonus"></div>
         </div>
 
         <!-- TAB 3: EYMERIC GALLERY -->
@@ -569,6 +597,29 @@
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224333_1e7e746c-a819-4e3c-9406-209a70befb63.png", label: "Atelier Workspace"}
         ];
 
+        // BADGES DATA - 7 OFFICIELLES
+        const badgesOfficial = [
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172318_68637d3d-4875-4f31-a35e-1aa647d0a934.png", label: "Baseline - Calcifère"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172328_3462bb83-c8dc-421e-b89c-d60022d3e0b4.png", label: "Bébé - Calcifère Jeune"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172413_5686e8fb-b5bb-4772-a26f-25102e65d601.png", label: "Cheminée - Cozy"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172537_07c17d0f-0587-499e-98a2-6a5a19963c4d.png", label: "Bûche - Gourmand"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172727_8022a54e-d0a4-43f1-86be-75829517b05f.png", label: "Œuf - Magique"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173114_dbaaeea5-312c-4ddb-878a-d27adea88fe8.png", label: "Poêle - Domestique"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173416_7cc3cbcf-c4cd-4611-b724-e835e04c8058.png", label: "Bleu Puissant - Transformation"}
+        ];
+
+        // BADGES DATA - BONUS/BLOOPERS
+        const badgesBonus = [
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173500_9288a464-dabf-4056-bf35-ac097c8188cc.png", label: "Bonus 1"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173553_2971c89f-a458-4d25-963f-3fcb176dbc51.png", label: "Bonus 2"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173613_85f945bc-f222-405e-aa69-260c4609e7d3.png", label: "Bonus 3"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174204_232207f1-fa28-477d-8cf7-e3d528495f0f.png", label: "Bonus 4"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174214_3c19868f-c163-41d0-b87f-381eea7950a1.png", label: "Bonus 5"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174454_16052316-f381-4937-a919-9adfabae887a.png", label: "Bonus 6"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174505_3a2d0712-f54e-433e-ad18-b5bf47a37d28.png", label: "Bonus 7"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174608_a0e62697-ec2a-4d38-b8e7-2892dac35f83.png", label: "Bonus 8"}
+        ];
+
         // EYMERIC GALLERY DATA
         const eymerricImages = [
             {url: "https://d2ol7oe51mr4n9.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/d579c5e8-77dc-4279-a570-6d423d90a8c7.png", favorite: true},
@@ -593,6 +644,7 @@
             document.getElementById('pixel-art-v2').classList.remove('active');
             document.getElementById('pixel-art').classList.remove('active');
             document.getElementById('eymeric').classList.remove('active');
+            document.getElementById('badges').classList.remove('active');
 
             // Remove active class from buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -608,6 +660,8 @@
                 renderPixelArtV2Gallery();
             } else if (tab === 'pixel-art') {
                 renderPixelArtGallery();
+            } else if (tab === 'badges') {
+                renderBadgesGallery();
             } else {
                 renderEymerricGallery();
             }
@@ -712,6 +766,41 @@
             document.getElementById('totalCounter').textContent = pixelArtRooms.length;
         }
 
+        function renderBadgesGallery() {
+            // Render official badges
+            const officialGallery = document.getElementById('badges-official');
+            officialGallery.innerHTML = '';
+
+            badgesOfficial.forEach((badge, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.onclick = () => openModal(index, badgesOfficial, 'badges');
+                
+                item.innerHTML = `
+                    <img src="${badge.url}" alt="${badge.label}" loading="lazy">
+                    <div class="room-label">${badge.label}</div>
+                `;
+                officialGallery.appendChild(item);
+            });
+
+            // Render bonus badges
+            const bonusGallery = document.getElementById('badges-bonus');
+            bonusGallery.innerHTML = '';
+
+            badgesBonus.forEach((badge, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.onclick = () => openModal(index, badgesBonus, 'badges-bonus');
+                
+                item.innerHTML = `
+                    <img src="${badge.url}" alt="${badge.label}" loading="lazy">
+                `;
+                bonusGallery.appendChild(item);
+            });
+
+            document.getElementById('totalCounter').textContent = badgesOfficial.length;
+        }
+
         function renderEymerricGallery() {
             const gallery = document.getElementById('eymeric-gallery');
             const emptyState = document.getElementById('emptyState');
@@ -772,22 +861,36 @@
 
         function prevImage(e) {
             e.stopPropagation();
-            let imageList = currentGalleryType === 'pixel-art-v2' 
-                ? pixelArtRoomsV2 
-                : currentGalleryType === 'pixel-art' 
-                ? pixelArtRooms 
-                : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
+            let imageList;
+            if (currentGalleryType === 'pixel-art-v2') {
+                imageList = pixelArtRoomsV2;
+            } else if (currentGalleryType === 'pixel-art') {
+                imageList = pixelArtRooms;
+            } else if (currentGalleryType === 'badges') {
+                imageList = badgesOfficial;
+            } else if (currentGalleryType === 'badges-bonus') {
+                imageList = badgesBonus;
+            } else {
+                imageList = currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite);
+            }
             currentModalIndex = (currentModalIndex - 1 + imageList.length) % imageList.length;
             openModal(currentModalIndex, imageList, currentGalleryType);
         }
 
         function nextImage(e) {
             e.stopPropagation();
-            let imageList = currentGalleryType === 'pixel-art-v2' 
-                ? pixelArtRoomsV2 
-                : currentGalleryType === 'pixel-art' 
-                ? pixelArtRooms 
-                : (currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite));
+            let imageList;
+            if (currentGalleryType === 'pixel-art-v2') {
+                imageList = pixelArtRoomsV2;
+            } else if (currentGalleryType === 'pixel-art') {
+                imageList = pixelArtRooms;
+            } else if (currentGalleryType === 'badges') {
+                imageList = badgesOfficial;
+            } else if (currentGalleryType === 'badges-bonus') {
+                imageList = badgesBonus;
+            } else {
+                imageList = currentFilter === 'all' ? eymerricImages : eymerricImages.filter(img => img.favorite);
+            }
             currentModalIndex = (currentModalIndex + 1) % imageList.length;
             openModal(currentModalIndex, imageList, currentGalleryType);
         }
