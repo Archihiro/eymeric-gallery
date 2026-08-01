@@ -39,6 +39,39 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #FFC857;
+            overflow: hidden;
+            background: rgba(47, 91, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 200, 87, 0.4);
+            animation: float 3s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
         }
 
         .subtitle {
@@ -487,7 +520,12 @@
 <body>
     <div class="container">
         <header>
-            <h1>Stream EYMRYC</h1>
+            <h1>
+                <div class="header-avatar">
+                    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_203259_451a00a4-1423-4037-ba58-c972765e8253.png" alt="Eymeric">
+                </div>
+                Stream EYMRYC
+            </h1>
             <p class="subtitle">Creative Showcase</p>
         </header>
 
@@ -496,7 +534,8 @@
             <!-- PIXEL ART ROOMS GROUP -->
             <div class="tab-group">
                 <span class="tab-group-label">Pixel Art Rooms</span>
-                <button class="tab-btn active" onclick="switchTab('pixel-art-v2')">🌆 v2 (Extérieurs)</button>
+                <button class="tab-btn active" onclick="switchTab('pixel-art-v3')">🎬 V3 (ext. avec refs)</button>
+                <button class="tab-btn" onclick="switchTab('pixel-art-v2')">🌆 v2 (Extérieurs)</button>
                 <button class="tab-btn" onclick="switchTab('pixel-art')">🏠 v1 (Intérieurs)</button>
             </div>
 
@@ -507,7 +546,15 @@
             <button class="tab-btn" onclick="switchTab('badges')">🎖️ Badges</button>
         </div>
 
-        <!-- TAB 1: PIXEL ART ROOMS V2 (Extérieurs Paris) - LANDING PAGE -->
+        <!-- TAB 1: PIXEL ART V3 (Extérieurs avec refs) - LANDING PAGE -->
+        <div id="pixel-art-v3" class="tab-content active">
+            <div class="controls" style="justify-content: center;">
+                <p style="color: #aaa; font-size: 14px;">12 Urban Scenes - Retro Anime Pixel Art with Easter Eggs</p>
+            </div>
+            <div class="gallery" id="pixel-v3-gallery"></div>
+        </div>
+
+        <!-- TAB 2: PIXEL ART ROOMS V2 (Extérieurs Paris) -->
         <div id="pixel-art-v2" class="tab-content active">
             <!-- SELECTION PANEL -->
             <div class="selection-panel" id="selectionPanelV2" style="display: none;">
@@ -574,6 +621,23 @@
 
     <script>
         // PIXEL ART ROOMS V2 (Extérieurs Paris) DATA
+        // PIXEL ART V3 DATA - 12 EXTERIEURS AVEC REFS
+        const pixelArtRoomsV3 = [
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205343_f35b4f72-538a-4f75-96aa-a7ceb271c58e.png", label: "Ref Scene 1"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205344_991d17ab-1671-41ff-b7cd-d9b42f52e4e4.png", label: "Ref Scene 2"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205402_634684ac-1fc1-4730-96a7-76256920dd90.png", label: "Ref Scene 3"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205403_d2ee486a-1d09-45d9-8a00-83437af7d01f.png", label: "Ref Scene 4"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205418_4e3b853f-b411-44ed-bd3c-5f895e79e120.png", label: "Ref Scene 5"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205418_651b3b60-b51b-4bc1-931d-a3b01f609e71.png", label: "Ref Scene 6"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205719_a9d62d1a-f4a0-4a79-8b33-6a94e0a95ffb.png", label: "Ref Scene 7"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205915_f1bf9789-2e77-4e36-837a-27fecf81ca03.png", label: "Ref Scene 8"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_205918_8847e186-ad60-48fc-aa65-3f870b9f4278.png", label: "Ref Scene 9"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_210031_e2b554b7-4b2a-4234-83d1-2b7a483d5314.png", label: "Ref Scene 10"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_210032_77bf8f87-c9ac-44cf-a206-0e1c00cbc3a9.png", label: "Ref Scene 11"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_210033_e7d22f71-2cba-4c49-b494-6dedab500692.png", label: "Ref Scene 12"}
+        ];
+
+        // PIXEL ART V2 DATA
         const pixelArtRoomsV2 = [
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221224_51f3a201-fc33-4454-b059-1aad99dae4e7.png", label: "Le Marais - Café Coin"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260731_221228_0180977d-1aec-40d5-96fa-69e6fa831de1.png", label: "Châtelet - Jardin Central"},
@@ -597,29 +661,28 @@
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260730_224333_1e7e746c-a819-4e3c-9406-209a70befb63.png", label: "Atelier Workspace"}
         ];
 
-        // BADGES DATA - 7 OFFICIELLES
+        // BADGES DATA - 6 OFFICIELLES (après suppression Lvl 3)
         const badgesOfficial = [
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172318_68637d3d-4875-4f31-a35e-1aa647d0a934.png", label: "Lvl 1"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_171101_54080ea9-99f8-4f1d-8450-bfb8168bb65f.png", label: "Lvl 2"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172328_3462bb83-c8dc-421e-b89c-d60022d3e0b4.png", label: "Lvl 3"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172413_5686e8fb-b5bb-4772-a26f-25102e65d601.png", label: "Lvl 4"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172537_07c17d0f-0587-499e-98a2-6a5a19963c4d.png", label: "Lvl 5"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172727_8022a54e-d0a4-43f1-86be-75829517b05f.png", label: "Lvl 6"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172735_26431840-b278-4d8c-bc45-382f5d2bb08f.png", label: "Lvl 7"}
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172413_5686e8fb-b5bb-4772-a26f-25102e65d601.png", label: "Lvl 3"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172537_07c17d0f-0587-499e-98a2-6a5a19963c4d.png", label: "Lvl 4"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_172727_8022a54e-d0a4-43f1-86be-75829517b05f.png", label: "Lvl 5"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_202913_c29e2093-bf3f-4cf6-a1bd-cca5ce71f6d1.png", label: "Lvl 6"}
         ];
 
         // BADGES DATA - BONUS/BLOOPERS
         const badgesBonus = [
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173114_dbaaeea5-312c-4ddb-878a-d27adea88fe8.png", label: "Poêle - Domestique"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173416_7cc3cbcf-c4cd-4611-b724-e835e04c8058.png", label: "Bleu Puissant - Transformation"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_201746_7e3f2623-f59c-4d0c-9671-46c4b29aad5c.png", label: "Shocked"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_201817_4cb8c4bd-d7fb-45e2-b596-b691e9ca352d.png", label: "Very Shocked"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_202111_bd23db01-2a09-4529-a87e-4ca2229365f9.png", label: "Expressionless"},
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173416_7cc3cbcf-c4cd-4611-b724-e835e04c8058.png", label: "Bleu Puissant"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173500_9288a464-dabf-4056-bf35-ac097c8188cc.png", label: "Bonus 1"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173553_2971c89f-a458-4d25-963f-3fcb176dbc51.png", label: "Bonus 2"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_173613_85f945bc-f222-405e-aa69-260c4609e7d3.png", label: "Bonus 3"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174204_232207f1-fa28-477d-8cf7-e3d528495f0f.png", label: "Bonus 4"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174214_3c19868f-c163-41d0-b87f-381eea7950a1.png", label: "Bonus 5"},
             {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174454_16052316-f381-4937-a919-9adfabae887a.png", label: "Bonus 6"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174505_3a2d0712-f54e-433e-ad18-b5bf47a37d28.png", label: "Bonus 7"},
-            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174608_a0e62697-ec2a-4d38-b8e7-2892dac35f83.png", label: "Bonus 8"}
+            {url: "https://d8j0ntlcm91z4.cloudfront.net/user_38AbI7eB75blbdegIREzoADNz8Y/hf_20260801_174505_3a2d0712-f54e-433e-ad18-b5bf47a37d28.png", label: "Bonus 7"}
         ];
 
         // EYMERIC GALLERY DATA
@@ -643,6 +706,7 @@
 
         function switchTab(tab) {
             // Hide all tabs
+            document.getElementById('pixel-art-v3').classList.remove('active');
             document.getElementById('pixel-art-v2').classList.remove('active');
             document.getElementById('pixel-art').classList.remove('active');
             document.getElementById('eymeric').classList.remove('active');
@@ -658,7 +722,9 @@
             currentGalleryType = tab;
 
             // Render appropriate gallery
-            if (tab === 'pixel-art-v2') {
+            if (tab === 'pixel-art-v3') {
+                renderPixelArtV3Gallery();
+            } else if (tab === 'pixel-art-v2') {
                 renderPixelArtV2Gallery();
             } else if (tab === 'pixel-art') {
                 renderPixelArtGallery();
@@ -667,6 +733,36 @@
             } else {
                 renderEymerricGallery();
             }
+        }
+
+        function renderPixelArtV3Gallery() {
+            const gallery = document.getElementById('pixel-v3-gallery');
+            gallery.innerHTML = '';
+
+            pixelArtRoomsV3.forEach((room, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item selectable';
+                
+                const isSelected = selectedImagesV2.some(sel => sel.url === room.url);
+                if (isSelected) {
+                    item.classList.add('selected');
+                }
+                
+                item.innerHTML = `
+                    <img src="${room.url}" alt="${room.label}" loading="lazy" style="cursor: pointer;">
+                    <div class="room-label">${room.label}</div>
+                    <div class="selection-checkbox" onclick="toggleSelectionV2(event, '${room.url}')">✓</div>
+                `;
+                
+                item.onclick = (e) => {
+                    if (e.target.closest('.selection-checkbox')) return;
+                    openModal(index, pixelArtRoomsV3, 'pixel-art-v3');
+                };
+                gallery.appendChild(item);
+            });
+
+            document.getElementById('totalCounter').textContent = pixelArtRoomsV3.length;
+            updateSelectedDisplayV2();
         }
 
         function renderPixelArtV2Gallery() {
@@ -864,7 +960,9 @@
         function prevImage(e) {
             e.stopPropagation();
             let imageList;
-            if (currentGalleryType === 'pixel-art-v2') {
+            if (currentGalleryType === 'pixel-art-v3') {
+                imageList = pixelArtRoomsV3;
+            } else if (currentGalleryType === 'pixel-art-v2') {
                 imageList = pixelArtRoomsV2;
             } else if (currentGalleryType === 'pixel-art') {
                 imageList = pixelArtRooms;
@@ -882,7 +980,9 @@
         function nextImage(e) {
             e.stopPropagation();
             let imageList;
-            if (currentGalleryType === 'pixel-art-v2') {
+            if (currentGalleryType === 'pixel-art-v3') {
+                imageList = pixelArtRoomsV3;
+            } else if (currentGalleryType === 'pixel-art-v2') {
                 imageList = pixelArtRoomsV2;
             } else if (currentGalleryType === 'pixel-art') {
                 imageList = pixelArtRooms;
@@ -904,8 +1004,8 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // Render pixel art v2 on load
-        renderPixelArtV2Gallery();
+        // Render pixel art v3 on load (landing page)
+        renderPixelArtV3Gallery();
     </script>
 </body>
 </html>
